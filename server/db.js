@@ -47,6 +47,16 @@ const createProduct = async({ name })=> {
   return response.rows[0];
 };
 
+const createUserProduct = async({ user_id, product_id })=> {
+  const SQL = `
+    INSERT INTO user_favorites(id, user_id, product_id) 
+    VALUES($1, $2, $3) 
+    RETURNING *
+  `;
+  const response = await client.query(SQL, [uuid.v4(), user_id, product_id]);
+  return response.rows[0];
+};
+
 const fetchUsers = async()=> {
   const SQL = `
     SELECT * FROM users;
@@ -63,7 +73,22 @@ const fetchProducts = async()=> {
   return response.rows;
 };
 
+const fetchUserProducts = async(id)=> {
+  const SQL = `
+    SELECT * FROM user_favorites
+    WHERE user_id = $1
+  `;
+  const response = await client.query(SQL, [ id ]);
+  return response.rows;
+};
 
+const deleteUserProduct = async({id, user_id})=> {
+  const SQL = `
+    DELETE FROM user_skills
+    WHERE id = $1 AND user_id = $2
+  `;
+  await client.query(SQL, [ id, user_id ]);
+};
 
 
 module.exports = {
@@ -71,7 +96,10 @@ module.exports = {
     createTables,
     createUser,
    createProduct,
+   createUserProduct,
    fetchUsers,
-   fetchProducts
+   fetchProducts,
+   fetchUserProducts,
+   deleteUserProduct
    
 };

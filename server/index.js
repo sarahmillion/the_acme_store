@@ -2,7 +2,11 @@ const {
     client, 
     createTables,
     createUser,
-    createProduct
+    createProduct,
+    createUserProduct,
+    fetchUsers,
+    fetchProducts,
+    fetchUserProducts,
 } = require('./db');
 
 const init = async()=> {
@@ -20,8 +24,20 @@ const init = async()=> {
     createProduct({ name: 'ipad'}),
     createProduct({ name: 'backpack'}),
     ]);
-    console.log(jack.id);
-    console.log(laptop.id);
+  const users = await fetchUsers();
+  console.log(users);
+  
+  const products = await fetchProducts();
+  console.log(products);
+  
+  
+   const userProducts = await Promise.all([
+    createUserProduct({ user_id: jack.id, product_id: laptop.id}),
+    createUserProduct({ user_id: jack.id, product_id: iphone.id}),
+    createUserProduct({ user_id: sally.id, product_id: ipad.id}),
+    createUserProduct({ user_id: bob.id, product_id: backpack.id}),
+  ]);
+  console.log(await fetchUserProducts(jack.id));
 };
 
 init();
