@@ -3,10 +3,11 @@ const {
     createTables,
     createUser,
     createProduct,
-    createUserProduct,
+    createFavorite,
     fetchUsers,
     fetchProducts,
-    fetchUserProducts,
+    fetchFavorites,
+    destroyFavorite
 } = require('./db');
 
 const init = async()=> {
@@ -19,7 +20,7 @@ const init = async()=> {
     createUser({ username: 'jack', password: 'hello' }),
     createUser({ username: 'sally', password: 'hi' }),
     createUser({ username: 'bob', password: 'shhh' }),
-     createProduct({ name: 'laptop'}),
+    createProduct({ name: 'laptop'}),
     createProduct({ name: 'iphone'}),
     createProduct({ name: 'ipad'}),
     createProduct({ name: 'backpack'}),
@@ -31,13 +32,14 @@ const init = async()=> {
   console.log(products);
   
   
-   const userProducts = await Promise.all([
-    createUserProduct({ user_id: jack.id, product_id: laptop.id}),
-    createUserProduct({ user_id: jack.id, product_id: iphone.id}),
-    createUserProduct({ user_id: sally.id, product_id: ipad.id}),
-    createUserProduct({ user_id: bob.id, product_id: backpack.id}),
+   const userFavorite = await Promise.all([
+    createFavorite({ user_id: jack.id, product_id: laptop.id}),
+    createFavorite({ user_id: jack.id, product_id: iphone.id}),
+    createFavorite({ user_id: sally.id, product_id: ipad.id}),
+    createFavorite({ user_id: bob.id, product_id: backpack.id}),
   ]);
-  console.log(await fetchUserProducts(jack.id));
+  console.log(await fetchFavorites(jack.id));
+  await destroyFavorite(userFavorite[0].id);
 };
 
 init();

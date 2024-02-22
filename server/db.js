@@ -47,7 +47,7 @@ const createProduct = async({ name })=> {
   return response.rows[0];
 };
 
-const createUserProduct = async({ user_id, product_id })=> {
+const createFavorite = async({ user_id, product_id })=> {
   const SQL = `
     INSERT INTO user_favorites(id, user_id, product_id) 
     VALUES($1, $2, $3) 
@@ -73,7 +73,7 @@ const fetchProducts = async()=> {
   return response.rows;
 };
 
-const fetchUserProducts = async(id)=> {
+const fetchFavorites = async(id)=> {
   const SQL = `
     SELECT * FROM user_favorites
     WHERE user_id = $1
@@ -82,9 +82,9 @@ const fetchUserProducts = async(id)=> {
   return response.rows;
 };
 
-const deleteUserProduct = async({id, user_id})=> {
+const destroyFavorite = async({id, user_id})=> {
   const SQL = `
-    DELETE FROM user_skills
+    DELETE FROM user_favorites
     WHERE id = $1 AND user_id = $2
   `;
   await client.query(SQL, [ id, user_id ]);
@@ -96,10 +96,10 @@ module.exports = {
     createTables,
     createUser,
    createProduct,
-   createUserProduct,
+   createFavorite,
    fetchUsers,
    fetchProducts,
-   fetchUserProducts,
-   deleteUserProduct
+   fetchFavorites,
+   destroyFavorite
    
 };
